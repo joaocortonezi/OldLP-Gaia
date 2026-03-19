@@ -21,7 +21,15 @@ export const metadata: Metadata = {
     shortcut: "/images/tozi-logo.png",
     apple: "/images/tozi-logo.png",
   },
-  generator: "v0.app",
+  // Meta tags de segurança HTTPS
+  other: {
+    "Content-Security-Policy": "upgrade-insecure-requests",
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
+    "X-Frame-Options": "DENY",
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+  },
+    generator: 'v0.app'
 }
 
 export default function RootLayout({
@@ -31,45 +39,63 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
-      <body className={inter.className}>
-        
-        {/* GOOGLE TAG */}
+      <head>
+        <link rel="icon" href="/images/tozi-logo.png" />
+        <link rel="shortcut icon" href="/images/tozi-logo.png" />
+        <link rel="apple-touch-icon" href="/images/tozi-logo.png" />
+
+        {/* Meta tags de segurança HTTPS */}
+        <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+        <meta httpEquiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains; preload" />
+        <meta httpEquiv="X-Frame-Options" content="DENY" />
+        <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
+        <meta httpEquiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+
+        {/* Preconnect para melhor performance HTTPS */}
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://www.google-analytics.com" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+
+        {/* Google Tag (gtag.js) com consentimento e HTTPS */}
         <Script
           async
           src="https://www.googletagmanager.com/gtag/js?id=AW-797364149"
           strategy="afterInteractive"
+          crossOrigin="anonymous"
         />
-
         <Script id="google-analytics" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-
+            
+            // Configurar consentimento padrão (negado)
             gtag('consent', 'default', {
-              'analytics_storage': 'granted',
-              'ad_storage': 'granted'
+              'analytics_storage': 'denied',
+              'ad_storage': 'denied'
             });
-
+            
+            // Configurar para HTTPS apenas
             gtag('config', 'AW-797364149', {
               'transport_type': 'beacon',
-              'anonymize_ip': true
+              'anonymize_ip': true,
+              'allow_google_signals': false
             });
           `}
         </Script>
 
-        {/* LEADSTER (FORMA CORRETA PRA PRODUÇÃO) */}
-        <Script
-          src="https://cdn.leadster.com.br/neurolead/neurolead.min.js"
-          strategy="afterInteractive"
-        />
-
-        <Script id="leadster-init" strategy="afterInteractive">
-          {`window.neuroleadId="upSaJi0A6ay6AwljeJ0A4CHWz";`}
+        {/* Script de verificação HTTPS */}
+        <Script id="https-check" strategy="afterInteractive">
+          {`
+            // Verificar se está em HTTPS e redirecionar se necessário
+            if (typeof window !== 'undefined' && window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
+              window.location.replace('https://' + window.location.hostname + window.location.pathname + window.location.search);
+            }
+          `}
         </Script>
-
-        {children}
-      </body>
+      </head>
+      <body className={inter.className}>{children}</body>
     </html>
   )
 }
