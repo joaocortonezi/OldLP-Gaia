@@ -21,19 +21,6 @@ export const metadata: Metadata = {
     shortcut: "/images/tozi-logo.png",
     apple: "/images/tozi-logo.png",
   },
-
-  // 🔥 CSP LIBERANDO LEADSTER + GOOGLE
-  other: {
-    "Content-Security-Policy": `
-      default-src 'self';
-      script-src 'self' 'unsafe-inline' https://cdn.leadster.com.br https://www.googletagmanager.com;
-      connect-src 'self' https://cdn.leadster.com.br https://www.google-analytics.com;
-      img-src 'self' data: https:;
-      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-      font-src 'self' https://fonts.gstatic.com;
-    `,
-  },
-
   generator: "v0.app",
 }
 
@@ -71,21 +58,14 @@ export default function RootLayout({
           `}
         </Script>
 
-        {/* LEADSTER */}
-        <Script id="leadster" strategy="afterInteractive">
-          {`
-            (function(a,b,c,d){
-              try{
-                var e=b.head||b.getElementsByTagName("head")[0];
-                var f=b.createElement("script");
-                f.setAttribute("src",c);
-                f.setAttribute("charset","UTF-8");
-                f.defer=true;
-                a.neuroleadId=d;
-                e.appendChild(f)
-              }catch(g){}
-            })(window,document,"https://cdn.leadster.com.br/neurolead/neurolead.min.js","upSaJi0A6ay6AwljeJ0A4CHWz");
-          `}
+        {/* LEADSTER (FORMA CORRETA PRA PRODUÇÃO) */}
+        <Script
+          src="https://cdn.leadster.com.br/neurolead/neurolead.min.js"
+          strategy="afterInteractive"
+        />
+
+        <Script id="leadster-init" strategy="afterInteractive">
+          {`window.neuroleadId="upSaJi0A6ay6AwljeJ0A4CHWz";`}
         </Script>
 
         {children}
