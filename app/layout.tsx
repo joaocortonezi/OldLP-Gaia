@@ -21,6 +21,19 @@ export const metadata: Metadata = {
     shortcut: "/images/tozi-logo.png",
     apple: "/images/tozi-logo.png",
   },
+
+  // 🔥 CSP LIBERANDO LEADSTER + GOOGLE
+  other: {
+    "Content-Security-Policy": `
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' https://cdn.leadster.com.br https://www.googletagmanager.com;
+      connect-src 'self' https://cdn.leadster.com.br https://www.google-analytics.com;
+      img-src 'self' data: https:;
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      font-src 'self' https://fonts.gstatic.com;
+    `,
+  },
+
   generator: "v0.app",
 }
 
@@ -33,7 +46,7 @@ export default function RootLayout({
     <html lang="pt-BR">
       <body className={inter.className}>
         
-        {/* Google Tag */}
+        {/* GOOGLE TAG */}
         <Script
           async
           src="https://www.googletagmanager.com/gtag/js?id=AW-797364149"
@@ -47,28 +60,18 @@ export default function RootLayout({
             gtag('js', new Date());
 
             gtag('consent', 'default', {
-              'analytics_storage': 'denied',
-              'ad_storage': 'denied'
+              'analytics_storage': 'granted',
+              'ad_storage': 'granted'
             });
 
             gtag('config', 'AW-797364149', {
               'transport_type': 'beacon',
-              'anonymize_ip': true,
-              'allow_google_signals': false
+              'anonymize_ip': true
             });
           `}
         </Script>
 
-        {/* HTTPS redirect */}
-        <Script id="https-check" strategy="afterInteractive">
-          {`
-            if (typeof window !== 'undefined' && window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
-              window.location.replace('https://' + window.location.hostname + window.location.pathname + window.location.search);
-            }
-          `}
-        </Script>
-
-        {/* LEADSTER (CORRETO) */}
+        {/* LEADSTER */}
         <Script id="leadster" strategy="afterInteractive">
           {`
             (function(a,b,c,d){
